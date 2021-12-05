@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <AccelStepper.h>
-volatile signed char x,xalt,y,yalt,SavePos,SavePosalt = 0;
-int Pos = 0;  
+volatile signed char x,xalt,y,yalt,SavePos,SavePosalt,DrivePos = 0;
+int Pos, = 0;  
  AccelStepper stepper(1,5,4);
  AccelStepper stepper2(1,8,7);
 void setup()
@@ -11,6 +11,8 @@ void setup()
   Serial.begin(115200);           // start serial for output
   pinMode(9, OUTPUT);
   pinMode(9, LOW);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
   pinMode(6,OUTPUT);
   digitalWrite(6, HIGH);
   stepper.setAcceleration(500); 
@@ -46,12 +48,14 @@ void loop()
     if(y!= yalt){
   stepper2.setSpeed(y*10);} 
   stepper2.runSpeed();
-  }
+    }
+
+  
  if(SavePos == 1)
   {
     SavePos = 0; 
     stepper.setCurrentPosition(0); 
-    Serial.println("Test");
+    
   }
 }
 
@@ -61,8 +65,9 @@ void receiveEvent(int howMany)
 {
   xalt = x;
   yalt = y;
- x = Wire.read();
- y = Wire.read();
- SavePos = Wire.read();
- 
+  x = Wire.read();
+  y = Wire.read();
+  SavePos = Wire.read();
+  DrivePos = Wire.read(); 
+  if(DrivePos){Pos = stepper.currentPosition(); }
 }
