@@ -39,7 +39,7 @@ void loop()
  
   if(x>10 || x<-10){
     if(x!= xalt){
-  stepper.setSpeed(x*5);} 
+  stepper.setSpeed(x*5);} //Test
   stepper.runSpeed();
   }
   if(y>10 || y<-10){
