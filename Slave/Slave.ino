@@ -59,10 +59,10 @@ void receiveEvent(int howMany)
   SavePos = Wire.read();
   DrivePos = Wire.read(); 
   dataWasReceived = 0;
-  //if(SavePos) 
-  //Serial.println("POS gespeichert");
-  //if(DrivePos) 
-  //Serial.println("fahre POS");
+  if(SavePos) 
+  Serial.println("POS gespeichert: ",);
+  if(DrivePos) 
+  Serial.println("fahre POS");
 }
 
 void programmingmode()

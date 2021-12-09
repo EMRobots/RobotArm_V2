@@ -3,7 +3,7 @@
 
 volatile signed char x = 0;
 
-bool flag,flag_Button,flag_Viereck,old_flag_Viereck = false; 
+bool flag,flag_Button,flag_Viereck,old_flag_Viereck = 0; 
 void IRAM_ATTR isr() {
     flag = true; 
 }
@@ -23,13 +23,17 @@ void setup()
 void loop()
 {
  sendTicker(); //GIT TEST;
- if (Ps3.event.button_down.cross ){
-  flag_Button = true;  Serial.println("x");} else flag_Button = false;
-    
 
- if (Ps3.event.button_down.right){
-  flag_Viereck = true; 
-  Serial.println("Viereck");}else flag_Viereck = false;   
+ flag_Button = 0; 
+ flag_Viereck = 0; 
+ 
+ if (Ps3.event.button_down.cross)
+  flag_Button = 1;
+    
+ if (Ps3.event.button_down.right)
+  flag_Viereck = 1;
+
+   
 }
 
 void sendTicker()
@@ -39,10 +43,9 @@ void sendTicker()
     Wire.beginTransmission(4); // transmit to device #4
     Wire.write(Ps3.data.analog.stick.lx);
     Wire.write(Ps3.data.analog.stick.ly);
-    Wire.write((int)flag_Button);
-    Wire.write((int)flag_Viereck); 
+    Wire.write(flag_Button);
+    Wire.write(flag_Viereck); 
     Wire.endTransmission();    // stop transmitting
     flag = false; 
-    flag_Button = false;
   }
 }
