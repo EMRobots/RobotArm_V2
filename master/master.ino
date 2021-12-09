@@ -2,7 +2,8 @@
 #include <Ps3Controller.h>
 
 volatile signed char x = 0;
-bool flag,flag_Button,flag_Viereck = false; 
+
+bool flag,flag_Button,flag_Viereck,old_flag_Viereck = false; 
 void IRAM_ATTR isr() {
     flag = true; 
 }
@@ -22,8 +23,13 @@ void setup()
 void loop()
 {
  sendTicker(); //GIT TEST;
- if (Ps3.event.button_down.cross )
-  flag_Button = true; else flag_Button = false;   
+ if (Ps3.event.button_down.cross ){
+  flag_Button = true;  Serial.println("x");} else flag_Button = false;
+    
+
+ if (Ps3.event.button_down.right){
+  flag_Viereck = true; 
+  Serial.println("Viereck");}else flag_Viereck = false;   
 }
 
 void sendTicker()
@@ -33,11 +39,9 @@ void sendTicker()
     Wire.beginTransmission(4); // transmit to device #4
     Wire.write(Ps3.data.analog.stick.lx);
     Wire.write(Ps3.data.analog.stick.ly);
-    if (flag_Button)
-    {Wire.write(1);}else{Wire.write(0);}
-    Wire.write(Ps3.event.button_down.square); 
+    Wire.write((int)flag_Button);
+    Wire.write((int)flag_Viereck); 
     Wire.endTransmission();    // stop transmitting
-     //Serial.println(,DEC);
     flag = false; 
     flag_Button = false;
   }

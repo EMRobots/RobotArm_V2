@@ -1,7 +1,8 @@
 #include <Wire.h>
 #include <AccelStepper.h>
 volatile signed char x,xalt,y,yalt,SavePos,SavePosalt,DrivePos = 0;
-int Pos, = 0;  
+int Pos = 0;  
+bool dataWasReceived = 0; 
  AccelStepper stepper(1,5,4);
  AccelStepper stepper2(1,8,7);
 void setup()
@@ -11,8 +12,6 @@ void setup()
   Serial.begin(115200);           // start serial for output
   pinMode(9, OUTPUT);
   pinMode(9, LOW);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
   pinMode(6,OUTPUT);
   digitalWrite(6, HIGH);
   stepper.setAcceleration(500); 
@@ -34,22 +33,12 @@ void GetData()
 
 void loop()
 { 
-  GetData(); 
-  //Serial.println(SavePos, DEC);
-  // Serial.println("\n");
-  //Serial.println(y, DEC);
- 
-  if(x>10 || x<-10){
-    if(x!= xalt){
-  stepper.setSpeed(x*5);} //Test
-  stepper.runSpeed();
+  if(dataWasReceived == 0)
+  {
+    GetData(); 
   }
-  if(y>10 || y<-10){
-    if(y!= yalt){
-  stepper2.setSpeed(y*10);} 
-  stepper2.runSpeed();
-    }
 
+  programmingmode(); 
   
  if(SavePos == 1)
   {
@@ -69,5 +58,25 @@ void receiveEvent(int howMany)
   y = Wire.read();
   SavePos = Wire.read();
   DrivePos = Wire.read(); 
-  if(DrivePos){Pos = stepper.currentPosition(); }
+  dataWasReceived = 0;
+  //if(SavePos) 
+  //Serial.println("POS gespeichert");
+  //if(DrivePos) 
+  //Serial.println("fahre POS");
+}
+
+void programmingmode()
+{
+  
+   if(x>10 || x<-10){
+    if(x!= xalt){
+  stepper.setSpeed(x*5);} //Test
+  stepper.runSpeed();
+  }
+  
+  if(y>10 || y<-10){
+    if(y!= yalt){  
+  stepper2.setSpeed(y*10);} 
+  stepper2.runSpeed();
+    }
 }
