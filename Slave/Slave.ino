@@ -40,12 +40,12 @@ void loop()
 
   programmingmode(); 
   
- if(SavePos == 1)
-  {
-    SavePos = 0; 
-    stepper.setCurrentPosition(0); 
-    
-  }
+ //if(SavePos == 1)
+ // {
+ //   SavePos = 0; 
+ //   stepper.setCurrentPosition(0); 
+ //   
+ // }
 }
 
 // function that executes whenever data is received from master
@@ -59,10 +59,11 @@ void receiveEvent(int howMany)
   SavePos = Wire.read();
   DrivePos = Wire.read(); 
   dataWasReceived = 0;
-  if(SavePos) 
-  Serial.println("POS gespeichert: ",);
-  if(DrivePos) 
-  Serial.println("fahre POS");
+  if(SavePos)
+    Serial.println("X"); 
+  if(DrivePos)
+    Serial.println("Viereck");
+
 }
 
 void programmingmode()
